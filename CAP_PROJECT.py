@@ -31,8 +31,14 @@ class ATM:
     if amt > self.balance:
       print("Insufficient balance. Transaction cancelled.")
       return
-    self.balance -= amt
-    self._add_transaction("WITHDRAW", amt)
+    else:
+      check = int(input("Enter you pin: "))
+      if check == self.pin:
+        print("PIN MATCHED SUCCESSFULLY")
+        self.balance -= amt
+        self._add_transaction("WITHDRAW", amt)
+      else:
+        print("WRONG PIN")
     print("Remaining Balance is: ",self.balance)
   
   def display_balance(self):
