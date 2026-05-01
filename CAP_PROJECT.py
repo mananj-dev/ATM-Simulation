@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 class ATM:
@@ -31,14 +30,8 @@ class ATM:
     if amt > self.balance:
       print("Insufficient balance. Transaction cancelled.")
       return
-    else:
-      check = int(input("Enter you pin: "))
-      if check == self.pin:
-        print("PIN MATCHED SUCCESSFULLY")
-        self.balance -= amt
-        self._add_transaction("WITHDRAW", amt)
-      else:
-        print("WRONG PIN")
+    self.balance -= amt
+    self._add_transaction("WITHDRAW", amt)
     print("Remaining Balance is: ",self.balance)
   
   def display_balance(self):
@@ -85,5 +78,4 @@ def atm():
             break
         else:
             print("Invalid Choice")
-
 atm()
