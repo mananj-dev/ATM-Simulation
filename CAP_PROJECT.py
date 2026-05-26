@@ -9,6 +9,8 @@ class ATM:
     self.balance = balance
     self.pin = pin
     self.transactions = []
+    self.pin_attempts = 3
+    self.is_blocked = False
     self._add_transaction("ACCOUNT_OPENED ", 0.0)
 
   def _add_transaction(self, txn_type, amount):
@@ -26,19 +28,30 @@ class ATM:
     print("New Balance is: ",self.balance)
   
   def withdraw(self):
-    amt = float(input("Amount to be withdrawn:"))
+    if self.is_blocked:
+      print("ACCOUNT BLOCKED - Cannot perform withdrawal")
+      return
+
+    amt = float(input("Amount to be withdrawn: "))
     if amt > self.balance:
       print("Insufficient balance. Transaction cancelled.")
       return
+
+    check = int(input("Enter your PIN: "))
+    if check == self.pin:
+      print("PIN MATCHED SUCCESSFULLY")
+      self.balance -= amt
+      self._add_transaction("WITHDRAW", amt)
+      self.pin_attempts = 3
+      print("Remaining Balance is: ", self.balance)
     else:
-      check = int(input("Enter you pin: "))
-      if check == self.pin:
-        print("PIN MATCHED SUCCESSFULLY")
-        self.balance -= amt
-        self._add_transaction("WITHDRAW", amt)
+      self.pin_attempts -= 1
+      if self.pin_attempts > 0:
+        print(f"WRONG PIN - {self.pin_attempts} attempts remaining")
       else:
-        print("WRONG PIN")
-    print("Remaining Balance is: ",self.balance)
+        self.is_blocked = True
+        print("CARD BLOCKED - Maximum PIN attempts exceeded")
+
   
   def display_balance(self):
     self._add_transaction("BALANCE_CHECK ", 0.0)
